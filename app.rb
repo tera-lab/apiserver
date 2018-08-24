@@ -15,7 +15,8 @@ configure do
     ENV['MEMCACHE_SERVER'] || 'localhost:11211',
     username: ENV['MEMCACHE_USERNAME'],
     password: ENV['MEMCACHE_PASSWORD'],
-    namespace: 'tera_lab'
+    namespace: 'tera_lab',
+    compress: true
   )
 end
 
@@ -46,11 +47,11 @@ post '/party_match_link' do
     end
   end
 
-  last_pr = settings.cache.get(params['playerId'])
-  halt 429 if last_pr && (Time.now - last_pr) < 15
-  settings.cache.set(params['playerId'], Time.now)
-
   lfg = params[:lfg]
+  last_pr = settings.cache.get(lfg['id'])
+  halt 429 if last_pr && lfg['message'] == last_pr
+  settings.cache.set(lfg['id'], lfg['message'], 30)
+
   color = lfg['raid'] == 0 ? 0x54a0ff : 0xfeca57
   color = 0xee5253 if lfg['message'] =~ /買い?取/
 

@@ -18,6 +18,7 @@ configure do
     namespace: 'tera_lab',
     compress: true
   )
+  set :mutex, Thread::Mutex.new
 end
 
 helpers do
@@ -77,13 +78,16 @@ post '/party_match_link' do
   end
 
   lfg = params[:lfg]
-  last_pr = settings.cache.get(lfg['id'])
-  halt 429 if last_pr && lfg['message'] == last_pr
-  settings.cache.set(lfg['id'], lfg['message'], 180)
+  settings.mutex.synchronize do
+    last_pr = settings.cache.get(lfg['id'])
+    halt 429 if last_pr && lfg['message'] == last_pr
+    settings.cache.set(lfg['id'], lfg['message'], 180)
+  end
 
   color = lfg['raid'] == 0 ? 0x54a0ff : 0xfeca57
   color = 0xee5253 if lfg['message'] =~ /買い?取/
 
+  halt 'ok'
   HTTP.post(settings.lfg_hook, json: {
     embeds: [{
       author: {

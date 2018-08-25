@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/json'
 require 'rack/contrib'
 require 'dry-validation'
 require 'dalli'
@@ -42,6 +43,31 @@ class String
 end
 
 get '/' do
+  'ok'
+end
+
+get '/party_match_info' do
+  json settings.cache.get('party_match_info')
+end
+
+post '/party_match_info' do
+  validates do
+    required(:playerId).filled(:int?, gt?: 0)
+    required(:lfgList).each do
+      schema do
+        required(:isRaid).filled(:int?)
+        required(:playerCount).filled(:int?)
+        required(:message).filled(:str?)
+        required(:leader).filled(:str?)
+      end
+    end
+  end
+
+  data = {
+    lfgList: params[:lfgList],
+    updated_at: Time.now
+  }
+  settings.cache.set('party_match_info', data)
   'ok'
 end
 
@@ -97,4 +123,5 @@ post '/party_match_link' do
       timestamp: Time.now.iso8601
     }]
   })
+  'ok'
 end

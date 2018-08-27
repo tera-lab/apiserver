@@ -1,5 +1,6 @@
 class LfgController < Sinatra::Base
   get '/party_match_info' do
+    headers 'Access-Control-Allow-Origin' => '*'
     json(settings.cache.get('party_match_info') || {
       lfgList: [],
       updated_at: nil

@@ -1,9 +1,9 @@
 class LfgController < Sinatra::Base
   get '/party_match_info' do
     headers 'Access-Control-Allow-Origin' => '*'
-    json(settings.cache.get('party_match_info') || {
-      lfgList: [],
-      updated_at: Time.now
+    json({
+      lfgList: settings.cache.get('party_match_info.lfgList') || [],
+      updated_at: settings.cache.get('party_match_info.updated_at')
     })
   end
 
@@ -20,11 +20,8 @@ class LfgController < Sinatra::Base
       end
     end
 
-    data = {
-      lfgList: params[:lfgList],
-      updated_at: Time.now
-    }
-    settings.cache.set('party_match_info', data, 180)
+    settings.cache.set('party_match_info.lfgList', params[:lfgList], 180)
+    settings.cache.set('party_match_info.updated_at', Time.now)
     
     json ({
       success: 'updated'

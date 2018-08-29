@@ -1,4 +1,8 @@
 class GuildBamController < Sinatra::Base
+  configure do
+    set :webhooks, YAML.load_file('config/gb_webhooks.yml')    
+  end
+  
   def monster_name
     hour = Time.now.hour
     raise if hour > 22
@@ -32,9 +36,9 @@ class GuildBamController < Sinatra::Base
     bam = monster_name()
     halt if bam.nil?
 
-    settings.gb_webhooks.each do |hook|
-      HTTP.post(hook, json:{
-        content: "@here まもなく#{bam}が出現します"
+    settings.webhooks.each do |hook|
+      HTTP.post(hook['url'], json:{
+        content: "#{hook['prefix']}まもなく#{bam}が出現します"
       })
     end
   end

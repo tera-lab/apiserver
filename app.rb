@@ -13,9 +13,6 @@ require './helpers'
 class Sinatra::Base
   use Rack::PostBodyContentTypeParser
   configure do
-    set :lfg_hook, ENV['LFG_HOOK']
-    set :gb_webhooks, YAML.load_file('config/gb_webhooks.yml')
-
     set :mutex, Thread::Mutex.new
     set :cache, Dalli::Client.new(
       ENV['MEMCACHE_SERVER'] || 'localhost:11211',

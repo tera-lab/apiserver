@@ -21,7 +21,7 @@ webhooks = yaml.load(open('misc/gb_webhooks.yml'))
 def gquest_urgent_notify():
   if memcache.get('gquest_urgent_notify'):
     raise AlreadyNoticedException()
-  memcache.set('gquest_urgent_notify', True, 180)
+  memcache.set('gquest_urgent_notify', True, 60)
 
   wday = datetime.now().weekday()
   bam = None
@@ -32,14 +32,14 @@ def gquest_urgent_notify():
   elif wday in [2, 5]:
     bam = '貪欲のアナンシャ(vP)'
 
-  if not bam:
+  if bam is None:
     raise OutOfTimeException()
 
   for webhook in webhooks:
     requests.post(
-      webhook['url'],
+      webhook,
       json.dumps({
-        'content': '{}まもなく{}が出現します'.format(webhook.get('prefix'), bam)
+        'content': '@here まもなく{}が出現します'.format(bam)
       }),
       headers={'Content-Type': 'application/json'}
     )

@@ -1,2 +1,3 @@
-app.yaml
-config/gb_webhooks.yml
+lib/
+misc/gb_webhooks.yml
+**/*.pyc

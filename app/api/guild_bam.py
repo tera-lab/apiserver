@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from . import api
 from ..response import success_jsonify
-from ..exceptions import AlreadyNoticedException, OutOfTimeException
+from ..exceptions import OutOfTimeException
 
 from flask import request
 from datetime import datetime

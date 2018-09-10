@@ -9,6 +9,3 @@ handlers:
 libraries:
 - name: ssl
   version: latest
-
-env_variables:
-  TZ: 'Asia/Tokyo'

@@ -27,5 +27,5 @@ class Logger():
         self._cli = get_client(json_key_file='misc/tera-lab.json')
 
     def insert(self, data):
-        data.timestamp = datetime.now()
+        data['timestamp'] = datetime.now()
         self._cli.push_rows('login_log', 'raw', [data])

@@ -4,3 +4,4 @@ requests
 requests_toolbelt
 ruamel.yaml
 simplejson
+bigquery-python

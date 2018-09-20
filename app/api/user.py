@@ -1,68 +1,64 @@
-from __future__ import unicord_literals
+# coding: utf-8
+from __future__ import unicode_literals
 from . import api
-from ..models import User
-from ..response import success_jsonfy
+from ..models import Character, User, Logger
+from ..response import success_jsonify
+from ..utils import post_json
 
 from flask import request
-import requests
-import requests_toolbelt.adapters.appengine.monkeypatch as patch
-
-patch()
+from google.appengine.ext import ndb
 
 @api.route('/login', methods=['POST'])
-def post_login():
-    data = request.get_json()
-    if not check_sanity(data):
-        return success_jsonfy({
-            'fuck': 'you'
-        })
-    
-    put_rawlog(data)
-    user = User.query(User.unique == data['unique'])
+def login():
+  data = request.get_json()
+  user = User.query(User.unique == data['unique']).get()
+  character = Character.query(ndb.AND(
+    Character.serverId == data['serverId'],
+    Character.playerId == data['playerId']
+  )).get()
 
-    # New user
-    if not user:
-        send_webhook({
-            # rich: new user
-        })
+  if user:
+    if data['mac'] == 'Unknown':
+      pass
+    # Unique / MAC mismatch
+    elif user.mac != data['mac']:
+      post_json('https://discordapp.com/api/webhooks/492357190259310603/mS7liQAUsqVUw_Y_7Hsq5klrGfFhv5tvSNOiRLBqeuNyHfajyX8H_5yYk62FuhHrUnmn', {
+        'username': 'warning',
+        'embeds': [{
+          'description': '<@&479964532949778432> unique[{}]のMACアドレスが登録アドレスと異なっています'.format(user.unique),
+          'color': 0xff4757,
+          'fields': [
+            {
+              'name': 'Registered MAC',
+              'value': user.mac,
+              'inline': True
+            }, {
+              'name': 'Posted Mac',
+              'value': data['mac'],
+              'inline': True
+            }
+          ]
+        }]
+      })
+      user = User(unique=data['unique'], mac=data['mac'])
+  else:
+    user = User(unique=data['unique'], mac=data['mac'])
 
-        user = User(
-            unique = data['unique'],
-            mac = data['mac'],
-            characters = {data['name']: data['class']}
-        )
-
-        return success_jsonify({
-            'success': True
-        })
-
-    # Unique / MAC mismatch (proxy binary leaked?)
-    if user.mac != data['mac']
-        send_webhook({
-            # rich: mac mismatch
-        })
-
-    # update characters
-    user.characters[data['name']] = data['class']
-    user.put()
-    return success_jsonify({
-        'success': True
-    })
-
-def put_rawlog(rawlog):
-    pass
-
-def send_webhook(content):
-    requests.post(
-        hook,
-        json.dumps(content),
-        headers={'Content-Type': 'application/json'}
+  # new character
+  if not character:
+    character = Character(
+      serverId=data['serverId'],
+      playerId=data['playerId'],
+      name=data['name'],
+      job=data['job']
     )
+    character.put()
 
-def check_sanity(data):
-    # check all keys' availability
-    reqs = set(['unique', 'mac', 'name', 'class'])
-    if not set(data.keys()) == reqs:
-        return False
-        
-    return True
+  if not filter(lambda key:character.key == key, user.characters):
+    user.characters.append(character.key)
+
+  user.put()
+  # Logger.insert(stuff)
+  return success_jsonify({
+    'success': True
+  })

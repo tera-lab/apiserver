@@ -8,6 +8,7 @@ from ..utils import post_json
 from flask import request
 from google.appengine.ext import ndb
 
+WEBHOOK = 'https://discordapp.com/api/webhooks/492357190259310603/mS7liQAUsqVUw_Y_7Hsq5klrGfFhv5tvSNOiRLBqeuNyHfajyX8H_5yYk62FuhHrUnmn'
 
 @api.route('/login', methods=['POST'])
 def login():
@@ -18,34 +19,7 @@ def login():
         Character.playerId == data['playerId']
     )).get()
 
-    if user:
-        if data['mac'] == 'Unknown':
-            pass
-        # Unique / MAC mismatch
-        elif user.mac != data['mac']:
-            post_json('https://discordapp.com/api/webhooks/492357190259310603/mS7liQAUsqVUw_Y_7Hsq5klrGfFhv5tvSNOiRLBqeuNyHfajyX8H_5yYk62FuhHrUnmn', {
-                'username': 'warning',
-                'embeds': [{
-                    'description': '<@&479964532949778432> unique[{}]のMACアドレスが登録アドレスと異なっています'.format(user.unique),
-                    'color': 0xff4757,
-                    'fields': [
-                        {
-                            'name': 'Registered MAC',
-                            'value': user.mac,
-                            'inline': True
-                        }, {
-                            'name': 'Posted Mac',
-                            'value': data['mac'],
-                            'inline': True
-                        }
-                    ]
-                }]
-            })
-            user = User(unique=data['unique'], mac=data['mac'])
-    else:
-        user = User(unique=data['unique'], mac=data['mac'])
-
-    # new character
+    # New character
     if not character:
         character = Character(
             serverId=data['serverId'],
@@ -54,6 +28,54 @@ def login():
             job=data['job']
         )
         character.put()
+
+    if user:
+        # Unique / MAC mismatch
+        if user.mac != data['mac']:
+            post_json(WEBHOOK, {
+                'username': 'Warning',
+                'embeds': [{
+                    'title': 'Unique / MAC mismatch!',
+                    'color': 0xff4757,
+                    'fields': [
+                        {
+                            'name': 'Unique',
+                            'value': user.unique
+                        }, {
+                            'name': 'Registered MAC',
+                            'value': user.mac,
+                            'inline': True
+                        }, {
+                            'name': 'Detected Mac',
+                            'value': data['mac'],
+                            'inline': True
+                        }
+                    ]
+                }]
+            })
+    else:
+        user = User(unique=data['unique'], mac=data['mac'])
+        post_json(WEBHOOK, {
+            'username': 'Information',
+            'embeds': [{
+                'title': 'New User',
+                'color': 0x1e90ff,
+                'fields': [
+                    {
+                        'name': 'Character',
+                        'value': '{}({})'.format(character.name, character.job)
+                    }, {
+                        'name': 'Unique',
+                        'value': user.unique,
+                        'inline': True
+                    }, {
+                        'name': 'MAC',
+                        'value': user.mac,
+                        'inline': True
+                    }
+                ]
+            }]
+        })
 
     if not filter(lambda key: character.key == key, user.characters):
         user.characters.append(character.key)

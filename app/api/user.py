@@ -23,7 +23,7 @@ def login():
     # User exists
     if user:
         # update MAC if failed to get before
-        if user.mac == 'Unknown' and data.mac != 'Unknown:
+        if user.mac == 'Unknown' and data.mac != 'Unknown':
             user.mac = data.mac
         # Unique / MAC mismatch
         elif user.mac != data.mac:

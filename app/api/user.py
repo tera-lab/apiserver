@@ -35,10 +35,13 @@ def login():
             post_json(WEBHOOK, {
                 'username': 'Warning',
                 'embeds': [{
-                    'title': 'Unique / MAC mismatch!',
+                    'title': ':warning:Unique / MAC mismatch!',
                     'color': 0xff4757,
                     'fields': [
                         {
+                            'name': 'Character',
+                            'value': '{}({})'.format(character.name, character.job)
+                        }, {
                             'name': 'Unique',
                             'value': user.unique
                         }, {
@@ -58,7 +61,7 @@ def login():
         post_json(WEBHOOK, {
             'username': 'Information',
             'embeds': [{
-                'title': 'New User',
+                'title': ':ghost:New User',
                 'color': 0x1e90ff,
                 'fields': [
                     {

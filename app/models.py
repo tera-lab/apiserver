@@ -5,10 +5,12 @@ from datetime import datetime
 from google.appengine.ext import ndb
 from bigquery import get_client
 
+
 class Cosplay(ndb.Model):
     name = ndb.StringProperty()
     preset = ndb.JsonProperty()
     updated_at = ndb.DateTimeProperty(auto_now_add=True)
+
 
 class Character(ndb.Model):
     serverId = ndb.IntegerProperty()
@@ -16,10 +18,12 @@ class Character(ndb.Model):
     name = ndb.StringProperty()
     job = ndb.StringProperty()
 
+
 class User(ndb.Model):
     unique = ndb.StringProperty()
     mac = ndb.StringProperty()
     characters = ndb.KeyProperty(kind=Character, repeated=True)
+
 
 class Logger():
     _cli = get_client(json_key_file='misc/tera-lab.json', readonly=False)

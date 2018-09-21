@@ -7,9 +7,8 @@ import requests_toolbelt.adapters.appengine
 
 requests_toolbelt.adapters.appengine.monkeypatch()
 
+
 def post_json(url, data):
-  requests.post(
-    url,
-    json.dumps(data),
-    headers={'Content-Type': 'application/json'}
-  )
+    requests.post(
+        url, json.dumps(data), headers={'Content-Type': 'application/json'}
+    )

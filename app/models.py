@@ -18,6 +18,14 @@ class Character(ndb.Model):
     name = ndb.StringProperty()
     job = ndb.StringProperty()
 
+    def to_list(self):
+        return {
+            'serverId': self.serverId,
+            'playerId': self.playerId,
+            'name': self.name,
+            'job': self.job
+        }
+
 
 class User(ndb.Model):
     unique = ndb.StringProperty()

@@ -121,4 +121,13 @@ def login():
 
     user.put()
     Logger.insert(data)
-    return success_jsonify({'success': True})
+    return success_jsonify({'success': 'logged in'})
+
+
+@api.route('/user/<unique>/characters', methods=['GET'])
+def list_characters(unique):
+    user = User.query(User.unique == unique).get()
+    characters = [key.get().to_list()
+                  for key in user.characters] if user else []
+
+    return success_jsonify({'characters': characters})

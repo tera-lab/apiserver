@@ -34,7 +34,7 @@ def login():
         if user.mac != data['mac']:
             post_json(WEBHOOK, {
                 'username': 'Warning',
-                'content': '<@&479964532949778432>'
+                'content': '<@&479964532949778432>',
                 'embeds': [{
                     'title': ':warning:Unique / MAC mismatch!',
                     'color': 0xff4757,

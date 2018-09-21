@@ -13,6 +13,7 @@ from . import user
 
 from . import errors
 
+
 @api.route('/')
 def index():
-  return 'ok'
+    return 'ok'

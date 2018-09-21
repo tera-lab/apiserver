@@ -9,6 +9,7 @@ CORS(api)
 from . import cosplay
 from . import guild_bam
 from . import lfg
+from . import user
 
 from . import errors
 

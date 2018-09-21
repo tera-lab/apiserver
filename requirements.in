@@ -4,3 +4,5 @@ requests
 requests_toolbelt
 ruamel.yaml
 simplejson
+bigquery-python
+oauth2client

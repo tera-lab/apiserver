@@ -5,7 +5,6 @@ from datetime import datetime
 from google.appengine.ext import ndb
 from bigquery import get_client
 
-
 class Cosplay(ndb.Model):
     name = ndb.StringProperty()
     preset = ndb.JsonProperty()
@@ -23,9 +22,9 @@ class User(ndb.Model):
     characters = ndb.KeyProperty(kind=Character, repeated=True)
 
 class Logger():
-    def __init__(self):
-        self._cli = get_client(json_key_file='misc/tera-lab.json')
+    _cli = get_client(json_key_file='misc/tera-lab.json', readonly=False)
 
+    @classmethod
     def insert(self, data):
-        data['timestamp'] = datetime.now()
-        self._cli.push_rows('login_log', 'raw', [data])
+        data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self._cli.push_rows('log', 'login', [data])

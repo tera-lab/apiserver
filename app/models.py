@@ -17,13 +17,15 @@ class Character(ndb.Model):
     playerId = ndb.IntegerProperty()
     name = ndb.StringProperty()
     job = ndb.StringProperty()
+    last_login = ndb.DateTimeProperty(auto_now=True)
 
     def to_list(self):
         return {
             'serverId': self.serverId,
             'playerId': self.playerId,
             'name': self.name,
-            'job': self.job
+            'job': self.job,
+            'last_login': self.last_login
         }
 
 
@@ -38,5 +40,6 @@ class Logger():
 
     @classmethod
     def insert(self, data):
-        data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self._cli.push_rows('log', 'login', [data])
+        if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
+            data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self._cli.push_rows('log', 'login', [data])

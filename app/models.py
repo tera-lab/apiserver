@@ -1,7 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from google.appengine.ext import ndb
 from bigquery import get_client
 
@@ -20,12 +20,14 @@ class Character(ndb.Model):
     last_login = ndb.DateTimeProperty(auto_now=True)
 
     def to_list(self):
+        jst = (self.last_login + timedelta(hours=9
+                                          )).strftime("%Y-%m-%d %H:%M:%S")
         return {
             'serverId': self.serverId,
             'playerId': self.playerId,
             'name': self.name,
             'job': self.job,
-            'last_login': self.last_login
+            'last_login': jst
         }
 
 
@@ -40,6 +42,7 @@ class Logger():
 
     @classmethod
     def insert(self, data):
+        import os
         if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
             data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self._cli.push_rows('log', 'login', [data])

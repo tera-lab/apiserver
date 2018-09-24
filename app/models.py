@@ -35,6 +35,13 @@ class User(ndb.Model):
     mac = ndb.StringProperty()
     characters = ndb.KeyProperty(kind=Character, repeated=True)
 
+    def to_list(self):
+        return {
+            'unique': self.unique,
+            'mac': self.mac,
+            'characters': [key.get().to_list() for key in self.characters]
+        }
+
 
 class Logger():
     _cli = get_client(json_key_file='misc/tera-lab.json', readonly=False)

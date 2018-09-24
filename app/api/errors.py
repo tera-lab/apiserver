@@ -9,9 +9,11 @@ from ..exceptions import *
 def out_of_time(e):
     return error_jsonify({'error': 'out of time'})
 
+
 @api.errorhandler(UserNotFound)
 def funcname(e):
     return error_jsonify({'error': 'user not found'})
+
 
 @api.errorhandler(CharacterNotFound)
 def funcname(e):

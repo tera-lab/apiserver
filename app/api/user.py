@@ -136,7 +136,8 @@ def list_characters(unique):
 
 @api.route('/users/search', methods=['GET'])
 def search_user():
-    character = Character.query(Character.name == request.args.get('name')).get()
+    name = request.args.get('name')
+    character = Character.query(Character.name == name).get()
     if not character:
         raise CharacterNotFound()
 

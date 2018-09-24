@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 from . import api
+from ..exceptions import UserNotFound, CharacterNotFound
 from ..models import Character, User, Logger
 from ..response import success_jsonify
 from ..utils import post_json
@@ -124,10 +125,21 @@ def login():
     return success_jsonify({'success': 'logged in'})
 
 
-@api.route('/user/<unique>/characters', methods=['GET'])
+@api.route('/users/<unique>', methods=['GET'])
 def list_characters(unique):
     user = User.query(User.unique == unique).get()
-    characters = [key.get().to_list()
-                  for key in user.characters] if user else []
+    if not user:
+        raise UserNotFound()
 
-    return success_jsonify({'characters': characters})
+    return success_jsonify(user.to_list())
+
+
+@api.route('/users/search', methods=['GET'])
+def search_user():
+    name = request.args.get('name')
+    character = Character.query(Character.name == name).get()
+    if not character:
+        raise CharacterNotFound()
+
+    user = User.query(User.characters.IN([character.key])).get()
+    return success_jsonify(user.to_list())

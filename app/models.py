@@ -20,14 +20,13 @@ class Character(ndb.Model):
     last_login = ndb.DateTimeProperty(auto_now=True)
 
     def to_list(self):
-        jst = (self.last_login + timedelta(hours=9
-                                          )).strftime("%Y-%m-%d %H:%M:%S")
+        jst = (self.last_login + timedelta(hours=9))
         return {
             'serverId': self.serverId,
             'playerId': self.playerId,
             'name': self.name,
             'job': self.job,
-            'last_login': jst
+            'last_login': jst.strftime("%Y-%m-%d %H:%M:%S")
         }
 
 

@@ -120,6 +120,11 @@ def login():
     if not filter(lambda key: character.key == key, user.characters):
         user.characters.append(character.key)
 
+    mods = data.get('mods')
+    if not isinstance(mods, list):
+        mods = []
+    user.mods = mods
+
     user.put()
     Logger.insert(data)
     return success_jsonify({'success': 'logged in'})

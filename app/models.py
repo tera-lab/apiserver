@@ -34,6 +34,7 @@ class User(ndb.Model):
     unique = ndb.StringProperty()
     mac = ndb.StringProperty()
     characters = ndb.KeyProperty(kind=Character, repeated=True)
+    mods = ndb.StringProperty(repeated=True)
 
     def to_list(self):
         return {

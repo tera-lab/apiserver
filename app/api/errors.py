@@ -11,10 +11,15 @@ def out_of_time(e):
 
 
 @api.errorhandler(UserNotFound)
-def funcname(e):
+def user_notfound(e):
     return error_jsonify({'error': 'user not found'}, code=404)
 
 
 @api.errorhandler(CharacterNotFound)
-def funcname(e):
+def character_notfound(e):
     return error_jsonify({'error': 'character not found'}, code=404)
+
+
+@api.errorhandler(ServerUnknown)
+def server_unknown(e):
+    return error_jsonify({'error': 'server unknown'})

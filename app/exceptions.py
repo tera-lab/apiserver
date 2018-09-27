@@ -8,3 +8,7 @@ class UserNotFound(Exception):
 
 class CharacterNotFound(Exception):
     pass
+
+
+class ServerUnknown(Exception):
+    pass

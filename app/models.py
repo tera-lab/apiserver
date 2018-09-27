@@ -40,7 +40,8 @@ class User(ndb.Model):
         return {
             'unique': self.unique,
             'mac': self.mac,
-            'characters': [key.get().to_list() for key in self.characters]
+            'characters': [key.get().to_list() for key in self.characters],
+            'mods': self.mods
         }
 
 

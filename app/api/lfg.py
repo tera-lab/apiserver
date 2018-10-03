@@ -21,7 +21,7 @@ def list_party_match_info():
 @api.route('/party_match_info', methods=['POST'])
 def set_party_match_info():
     data = request.get_json()
-    memcache.set('party_match_info.lfgList', data['lfgList'], 180)
+    memcache.set('party_match_info.lfgList', data['lfgList'], 60 * 30)
     memcache.set('party_match_info.updated_at', datetime.now())
 
     return success_jsonify({'success': 'updated'})

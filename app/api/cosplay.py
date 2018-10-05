@@ -5,15 +5,19 @@ from ..models import Cosplay
 from ..response import success_jsonify
 
 from flask import request
+from google.appengine.api import memcache
 
 
 @api.route('/cosplay/list', methods=['GET'])
 def cosplay_list():
-    presets = Cosplay.query().fetch()
-    return success_jsonify(
-        {cosplay.name: cosplay.preset
-         for cosplay in presets}
-    )
+    data = memcache.get('cosplayer_presets')
+
+    if not data:
+        presets = Cosplay.query().fetch()
+        data = {cosplay.name: cosplay.preset for cosplay in presets}
+        memcache.set('cosplayer_presets', data, 300)
+
+    return success_jsonify(data)
 
 
 @api.route('/cosplay/upload', methods=['POST'])

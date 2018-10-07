@@ -31,7 +31,7 @@ def login():
             name=data['name'],
             job=data['job']
         )
-    character.put()
+        character.put()
 
     if user:
         if user.mac != data['mac']:

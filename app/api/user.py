@@ -31,16 +31,16 @@ def login():
             name=data['name'],
             job=data['job']
         )
-        character.put()
+    character.put()
 
+    mismatch = False
     if user:
         if user.mac != data['mac']:
+            mismatch = True
             post_json(
                 WEBHOOK, {
                     'username':
                         'Warning',
-                    'content':
-                        '<@&479964532949778432>',
                     'embeds':
                         [
                             {
@@ -126,8 +126,10 @@ def login():
     user.mods = mods
 
     user.put()
-    Logger.insert(data)
-    return success_jsonify({'success': 'logged in'})
+    if mismatch:
+        return success_jsonify({'success': 'mismatch'})
+    else:
+        return success_jsonify({'success': 'logged in'})
 
 
 @api.route('/users/<unique>', methods=['GET'])

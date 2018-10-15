@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from . import api
 from ..exceptions import UserNotFound, CharacterNotFound
-from ..models import Character, User, Logger
+from ..models import Character, User
 from ..response import success_jsonify
 from ..utils import post_json
 
@@ -123,7 +123,9 @@ def login():
     mods = data.get('mods')
     if not isinstance(mods, list):
         mods = []
-    user.mods = mods
+    user.mods = [
+        '\t'.join([mod.get('name'), mod.get('server')]) for mod in mods
+    ]
 
     user.put()
     if mismatch:

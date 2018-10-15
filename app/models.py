@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 from google.appengine.ext import ndb
-from bigquery import get_client
 
 
 class Cosplay(ndb.Model):
@@ -31,7 +30,7 @@ class User(ndb.Model):
     unique = ndb.StringProperty()
     mac = ndb.StringProperty()
     characters = ndb.KeyProperty(kind=Character, repeated=True)
-    mods = ndb.StringProperty(repeated=True)
+    mods = ndb.StringProperty(repeated=True, indexed=False)
 
     def to_list(self):
         return {
@@ -40,14 +39,3 @@ class User(ndb.Model):
             'characters': [key.get().to_list() for key in self.characters],
             'mods': self.mods
         }
-
-
-class Logger():
-    _cli = get_client(json_key_file='misc/tera-lab.json', readonly=False)
-
-    @classmethod
-    def insert(self, data):
-        import os
-        if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-            data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self._cli.push_rows('log', 'login', [data])

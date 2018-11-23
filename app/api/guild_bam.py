@@ -17,8 +17,6 @@ webhooks = yaml.load(open('misc/gb_webhooks.yml'))
 @api.route('/gquest_urgent_notify', methods=['POST'])
 def gquest_urgent_notify():
     data = request.get_json()
-    if data and data.get('content', '').endswith('(Test message)'):
-        return success_jsonify({'success': 'ok'})
 
     wday = datetime.now().weekday()
     if wday in [0, 3]:
@@ -43,7 +41,7 @@ def gquest_urgent_notify():
     if memcache.get(key):
         return success_jsonify({'success': 'noticed'})
     else:
-        memcache.set(key, True, 60)
+        memcache.set(key, True, 60*30)
 
     for webhook in webhooks:
         post_json(

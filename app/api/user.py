@@ -150,5 +150,8 @@ def search_user():
     if not character:
         raise CharacterNotFound()
 
-    user = User.query(User.characters.IN([character.key])).get()
+    user = User\
+        .query(User.characters.IN([character.key]))\
+        .order(-User.created_at)\
+        .get()
     return success_jsonify(user.to_list())

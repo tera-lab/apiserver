@@ -41,7 +41,7 @@ def gquest_urgent_notify():
     if memcache.get(key):
         return success_jsonify({'success': 'noticed'})
     else:
-        memcache.set(key, True, 60*30)
+        memcache.set(key, True, 60 * 30)
 
     for webhook in webhooks:
         post_json(

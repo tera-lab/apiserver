@@ -8,7 +8,7 @@ from google.appengine.ext import ndb
 class Cosplay(ndb.Model):
     name = ndb.StringProperty()
     preset = ndb.JsonProperty()
-    updated_at = ndb.DateTimeProperty(auto_now_add=True)
+    updated_at = ndb.DateTimeProperty(auto_now=True)
 
 
 class Character(ndb.Model):
@@ -31,7 +31,7 @@ class User(ndb.Model):
     mac = ndb.StringProperty()
     characters = ndb.KeyProperty(kind=Character, repeated=True)
     mods = ndb.StringProperty(repeated=True, indexed=False)
-    created_at = ndb.DateTimeProperty(auto_now_add=True)
+    updated_at = ndb.DateTimeProperty(auto_now=True)
 
     def to_list(self):
         return {

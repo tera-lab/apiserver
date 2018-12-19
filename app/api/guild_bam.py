@@ -32,24 +32,27 @@ def gquest_urgent_notify():
         raise OutOfTimeException()
 
     server_id = request.args.get('serverId')
+    notify_type = int(request.args.get('type'))
+
     servers = {'5071': 'エリーヌ', '5073': 'ヴェリック'}
     server_name = servers.get(server_id)
     if not server_name:
         raise ServerUnknown()
 
-    key = 'gquest_urgent_notify.{}'.format(server_id)
+    key = 'gquest_urgent_notify.{}.{}'.format(server_id, notify_type)
     if memcache.get(key):
         return success_jsonify({'success': 'noticed'})
     else:
         memcache.set(key, True, 60 * 30)
 
+    if notify_type == 0:
+        text = 'まもなく{}サーバーで{}が出現します'.format(server_name, monster_name)
+    elif notify_type == 1:
+        text = '{}サーバーで{}が出現しました'.format(server_name, monster_name)
+    elif notify_type == 3:
+        text = '{}サーバーで{}が討伐されました'.format(server_name, monster_name)
+
     for webhook in webhooks:
-        post_json(
-            webhook, {
-                'content':
-                    '@here まもなく{}サーバーで{}が出現します'.
-                    format(server_name, monster_name)
-            }
-        )
+        post_json(webhook, {'content': '@here ' + text})
 
     return success_jsonify({'success': 'noticed'})

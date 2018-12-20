@@ -48,13 +48,13 @@ def gquest_urgent_notify():
         memcache.set(key, True, 60 * 30)
 
     if notify_type == 0:
-        text = 'まもなく{}サーバーで{}が出現します'.format(server_name, monster_name)
+        text = '@here まもなく{}サーバーで{}が出現します'.format(server_name, monster_name)
     elif notify_type == 1:
         text = '{}サーバーで{}が出現しました'.format(server_name, monster_name)
     elif notify_type == 3:
         text = '{}サーバーで{}が討伐されました'.format(server_name, monster_name)
 
     for webhook in webhooks:
-        post_json(webhook, {'content': '@here ' + text})
+        post_json(webhook, {'content': text})
 
     return success_jsonify({'success': 'noticed'})

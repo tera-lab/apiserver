@@ -23,3 +23,8 @@ def character_notfound(e):
 @api.errorhandler(ServerUnknown)
 def server_unknown(e):
     return error_jsonify({'error': 'server unknown'})
+
+
+@api.errorhandler(NotifyTypeUnknown)
+def notifytype_unknown(e):
+    return error_jsonify({'error': 'notify_type unknown'})

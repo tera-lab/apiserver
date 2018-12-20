@@ -32,12 +32,14 @@ def gquest_urgent_notify():
         raise OutOfTimeException()
 
     server_id = request.args.get('serverId')
-    notify_type = int(request.args.get('type'))
-
+    notify_type = int(request.args.get('type', -1))
     servers = {'5071': 'エリーヌ', '5073': 'ヴェリック'}
     server_name = servers.get(server_id)
+
     if not server_name:
         raise ServerUnknown()
+    elif notify_type == -1:
+        raise NotifyTypeUnknown()
 
     key = 'gquest_urgent_notify.{}.{}'.format(server_id, notify_type)
     if memcache.get(key):

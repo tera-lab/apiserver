@@ -12,3 +12,7 @@ class CharacterNotFound(Exception):
 
 class ServerUnknown(Exception):
     pass
+
+
+class NotifyTypeUnknown(Exception):
+    pass

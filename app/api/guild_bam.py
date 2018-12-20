@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from . import api
 from ..response import success_jsonify
-from ..exceptions import OutOfTimeException, ServerUnknown
+from ..exceptions import OutOfTimeException, ServerUnknown, InvalidNotifyType
 from ..utils import post_json
 
 from flask import request

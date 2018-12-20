@@ -25,6 +25,6 @@ def server_unknown(e):
     return error_jsonify({'error': 'server unknown'})
 
 
-@api.errorhandler(NotifyTypeUnknown)
+@api.errorhandler(InvalidNotifyType)
 def notifytype_unknown(e):
-    return error_jsonify({'error': 'notify_type unknown'})
+    return error_jsonify({'error': 'notify_type was invalid'})

@@ -14,5 +14,5 @@ class ServerUnknown(Exception):
     pass
 
 
-class NotifyTypeUnknown(Exception):
+class InvalidNotifyType(Exception):
     pass

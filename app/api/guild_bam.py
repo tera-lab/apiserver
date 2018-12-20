@@ -38,8 +38,8 @@ def gquest_urgent_notify():
 
     if not server_name:
         raise ServerUnknown()
-    elif notify_type == -1:
-        raise NotifyTypeUnknown()
+    elif notify_type not in [0, 1, 3]:
+        raise InvalidNotifyType()
 
     key = 'gquest_urgent_notify.{}.{}'.format(server_id, notify_type)
     if memcache.get(key):
@@ -48,12 +48,13 @@ def gquest_urgent_notify():
         memcache.set(key, True, 60 * 30)
 
     if notify_type == 0:
-        text = '@here まもなく{}サーバーで{}が出現します'.format(server_name, monster_name)
+        text = '@here まもなく{}サーバーで{}が出現します'
     elif notify_type == 1:
-        text = '{}サーバーで{}が出現しました'.format(server_name, monster_name)
+        text = '{}サーバーで{}が出現しました'
     elif notify_type == 3:
-        text = '{}サーバーで{}が討伐されました'.format(server_name, monster_name)
+        text = '{}サーバーで{}が討伐されました'
 
+    text = text.format(server_name, monster_name)
     for webhook in webhooks:
         post_json(webhook, {'content': text})
 

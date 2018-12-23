@@ -152,3 +152,12 @@ def search_user():
 
     users = User.query(User.characters.IN([character.key])).fetch()
     return success_jsonify({'users': [user.to_list() for user in users]})
+
+
+@api.route('/users/all', methods=['GET'])
+def show_all_users():
+    return success_jsonify(
+        {
+            'users': [user.to_list() for user in User.query().fetch()]
+        }
+    )

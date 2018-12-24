@@ -29,11 +29,10 @@ class Character(ndb.Model):
 
 class Mod(ndb.Model):
     name = ndb.StringProperty(required=True)
-    server = ndb.StringProperty()
     raw = ndb.JsonProperty()
 
     def to_list(self):
-        return {'name': self.name, 'server': self.server, 'raw': self.raw}
+        return {'name': self.name, 'raw': self.raw}
 
 
 class User(ndb.Model):

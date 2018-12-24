@@ -121,7 +121,7 @@ def login():
         user.characters.append(character.key)
 
     user.mods = [
-        Mod(name=mod.get('name'), server=mod.get('server'), raw=mod.get('raw'))
+        Mod(name=mod.get('name'), raw=mod.get('raw'))
         for mod in data.get('mods', [])
     ]
 

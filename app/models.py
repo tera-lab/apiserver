@@ -16,6 +16,7 @@ class Character(ndb.Model):
     playerId = ndb.IntegerProperty()
     name = ndb.StringProperty()
     job = ndb.StringProperty()
+    last_login = ndb.DateTimeProperty(auto_now=True)
 
     def to_list(self):
         return {
@@ -26,17 +27,26 @@ class Character(ndb.Model):
         }
 
 
+class Mod(ndb.Model):
+    name = ndb.StringProperty(required=True)
+    server = ndb.StringProperty()
+    raw = ndb.JsonProperty()
+
+    def to_list(self):
+        return {'name': self.name, 'server': self.server, 'raw': self.raw}
+
+
 class User(ndb.Model):
     unique = ndb.StringProperty()
     mac = ndb.StringProperty()
     characters = ndb.KeyProperty(kind=Character, repeated=True)
-    mods = ndb.StringProperty(repeated=True, indexed=False)
-    updated_at = ndb.DateTimeProperty(auto_now=True)
+    mods = ndb.LocalStructuredProperty(Mod, repeated=True)
+    last_login = ndb.DateTimeProperty(auto_now=True)
 
     def to_list(self):
         return {
             'unique': self.unique,
             'mac': self.mac,
             'characters': [key.get().to_list() for key in self.characters],
-            'mods': self.mods
+            'mods': [mod.to_list() for mod in self.mods]
         }

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from . import api
 from ..exceptions import UserNotFound, CharacterNotFound
-from ..models import Character, User
+from ..models import Character, User, Mod
 from ..response import success_jsonify
 from ..utils import post_json
 
@@ -120,11 +120,9 @@ def login():
     if not filter(lambda key: character.key == key, user.characters):
         user.characters.append(character.key)
 
-    mods = data.get('mods')
-    if not isinstance(mods, list):
-        mods = []
     user.mods = [
-        '\t'.join([mod.get('name'), mod.get('server')]) for mod in mods
+        Mod(name=mod.get('name'), server=mod.get('server'), raw=mod.get('raw'))
+        for mod in data.get('mods', [])
     ]
 
     user.put()

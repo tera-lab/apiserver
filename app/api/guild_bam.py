@@ -20,11 +20,11 @@ def gquest_urgent_notify():
 
     wday = datetime.now().weekday()
     if wday in [0, 3]:
-        monster_name = '虐殺のサブラニア(崖下)'
+        monster_name = '虐殺のサブラニア'
     elif wday in [1, 4]:
-        monster_name = '貪欲のアナンシャ(vP)'
+        monster_name = '貪欲のアナンシャ'
     elif wday in [2, 6]:
-        monster_name = '激昂のカラゴス(崖上)'
+        monster_name = '激昂のカラゴス'
     else:
         monster_name = None
 

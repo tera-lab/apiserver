@@ -33,3 +33,14 @@ def cosplay_upload():
         first.put()
 
     return success_jsonify({'success': 'updated'})
+
+
+@api.route('/cosplay/remove', methods=['POST'])
+def remove_cosplay():
+    data = request.get_json()
+    for name in data['characters']:
+        char = Cosplay.query(Cosplay.name == name).get()
+        if char:
+            char.key.delete()
+
+    return success_jsonify({'success': 'removed'})

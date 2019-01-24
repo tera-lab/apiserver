@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from . import api
 from ..exceptions import UserNotFound, CharacterNotFound
-from ..models import Character, User, Mod
+from ..models import Character, User, Account, Mod
 from ..response import success_jsonify
 from ..utils import post_json
 
@@ -130,6 +130,19 @@ def login():
         return success_jsonify({'success': 'mismatch'})
     else:
         return success_jsonify({'success': 'logged in'})
+
+
+@api.route('/account_info', methods=['POST'])
+def account_info():
+    data = request.get_json()
+    account = Account.query(Account.accountId == data['accountId']).get()
+
+    if not account:
+        account = Account(accountId=data['accountId'])
+    account.characters = data['characters']
+    account.put()
+
+    return success_jsonify({'success': 'ok'})
 
 
 @api.route('/users/<unique>', methods=['GET'])

@@ -27,6 +27,11 @@ class Character(ndb.Model):
         }
 
 
+class Account(ndb.Model):
+    accountId = ndb.IntegerProperty(required=True)
+    characters = ndb.StringProperty(repeated=True)
+
+
 class Mod(ndb.Model):
     name = ndb.StringProperty(required=True)
     raw = ndb.JsonProperty()

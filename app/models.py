@@ -28,7 +28,7 @@ class Character(ndb.Model):
 
 
 class Account(ndb.Model):
-    accountId = ndb.IntegerProperty(required=True)
+    accountId = ndb.StringProperty(required=True)
     characters = ndb.StringProperty(repeated=True)
 
 

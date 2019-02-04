@@ -15,7 +15,7 @@ def cosplay_list():
     if not data:
         presets = Cosplay.query().fetch()
         data = {cosplay.name: cosplay.preset for cosplay in presets}
-        memcache.set('cosplayer_presets', data, 300)
+        memcache.set('cosplayer_presets', data, 30)
 
     return success_jsonify(data)
 
